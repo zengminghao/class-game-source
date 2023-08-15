@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Board</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/board.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+  </head>
+  <body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('home') }}">TankTactics</a>
+    </div>
+    
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+      <li><a href="{{ url_for('home') }}">
+        <span class="glyphicon glyphicon-home"></span> Home
+      </a></li>
+      <li><a href="{{ url_for('rules') }}">
+        <span class="glyphicon glyphicon-question-sign"></span> Rules
+      </a></li>
+      <li><a href="{{ url_for('status') }}">
+        <span class="glyphicon glyphicon-envelope"></span> Status
+      </a></li>
+      <li class="active"><a href="{{ url_for('board') }}">
+        <span class="glyphicon glyphicon-th"></span> Board
+      </a></li>
+      <li><a href="{{ url_for('users') }}">
+        <span class="glyphicon glyphicon-user"></span> Users
+      </a></li>
+  {% if show_hidden %}
+      <li><a href="{{ url_for('admin') }}">
+        <span class="glyphicon glyphicon-cog"></span> Admin
+      </a></li>
+  {% endif %}
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+  {% if logged_in %}
+      <li><a href="{{ url_for('logout') }}">
+        <span class="glyphicon glyphicon-log-out"></span> Log Out
+      </a></li>
+  {% else %}
+      <li><a href="{{ url_for('login') }}">
+        <span class="glyphicon glyphicon-log-in"></span> Login
+      </a></li>
+  {% endif %}
+    </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <center>
+
+  <h1>Board</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}" alert-dismissible role="alert"> {{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+  <p>Welcome, {{ username }}!</p>
+
+  <div style="overflow-x: hidden;">
+  {{ content|safe }}
+  </div>
+  <br><br>
+
+<div class="container" style="max-width:400px;">
+<div class="media" id="infopad" style="display:none;">
+  <div class="media-left">
+    <img class="media-object" id="infopadavatar" src="#" style="width:60px;height:60px;">
+  </div>
+  <div class="media-body">
+    <p class="media-heading" id="infopadintro">(username)</p>
+    <p id="infopaddesc">(description)</p>
+
+<form style='display:none;' action="/action" method="get" id="useraction">
+    <span>Action:</span>
+    <select class="btn btn-default" name="actionid" id="actionid">
+      <option value="null">do nothing</option>
+    </select>
+    <input type="hidden" id="userid" name="userid" value="" placeholder="" />
+    <button type="submit" class="btn btn-default">Confirm</button>
+</form>
+
+  </div>
+</div>
+</div>
+
+
+<br><br><br>
+
+<script type="text/javascript">
+    function setuid(uid, alias, imgu, op1, op2, op3, hp) {
+        document.getElementById('infopadintro').innerHTML = "<b>" + uid + alias + "</b>";
+        document.getElementById('infopaddesc').innerHTML = "Lives: " + hp.toString() + ".";
+        document.getElementById('infopadavatar').src = imgu;
+        document.getElementById('infopad').style.display="inline";
+        
+        if (op1 + op2 + op3 >= 1) {
+            var v = "";
+            if (op1 == 1) {v += "<option value='attack'>attack</option>";}
+            if (op1 == 1) {v += "<option value='trade'>trade</option>";}
+            if (op2 == 1) {v += "<option value='upgrade'>upgrade</option>";}
+            if (op2 == 1) {v += "<option value='heal'>heal</option>";}
+            if (op3 == 1) {v += "<option value='vote'>vote</option>";}
+            document.getElementById('actionid').innerHTML = v;
+            document.getElementById('userid').value = uid;
+            // document.getElementById('useridalt').innerHTML = uid + ".";
+            document.getElementById("useraction").style.display="inline";
+        }
+    }
+</script>
+
+  </center>
+</div>
+
+  <script src="{{ url_for('static', filename='js/script.js')}}">
+  </script>
+  </body>
+</html>

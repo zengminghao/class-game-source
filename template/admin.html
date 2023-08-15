@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+  </head>
+  <body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('home') }}">TankTactics</a>
+    </div>
+    
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+      <li><a href="{{ url_for('home') }}">
+        <span class="glyphicon glyphicon-home"></span> Home
+      </a></li>
+      <li><a href="{{ url_for('rules') }}">
+        <span class="glyphicon glyphicon-question-sign"></span> Rules
+      </a></li>
+      <li><a href="{{ url_for('status') }}">
+        <span class="glyphicon glyphicon-envelope"></span> Status
+      </a></li>
+      <li><a href="{{ url_for('board') }}">
+        <span class="glyphicon glyphicon-th"></span> Board
+      </a></li>
+      <li><a href="{{ url_for('users') }}">
+        <span class="glyphicon glyphicon-user"></span> Users
+      </a></li>
+      <li class="active"><a href="{{ url_for('admin') }}">
+        <span class="glyphicon glyphicon-cog"></span> Admin
+      </a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+  {% if logged_in %}
+      <li><a href="{{ url_for('logout') }}">
+        <span class="glyphicon glyphicon-log-out"></span> Log Out
+      </a></li>
+  {% else %}
+      <li><a href="{{ url_for('login') }}">
+        <span class="glyphicon glyphicon-log-in"></span> Login
+      </a></li>
+  {% endif %}
+    </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <center>
+
+  <h1>Admin</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}" alert-dismissible role="alert"> {{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+  <p>Welcome, {{ username }}!</p>
+
+  <p><b>Status</b></p>
+
+  <div>
+  <form style='display:inline;' action="/admin" method="post">
+     <input type="hidden" id="actionid" name="actionid" value="status">
+     <input type="hidden" id="phase" name="phase" value="stopped">
+     <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure to stop the game?')">Stop</button>
+  </form>
+  <form style='display:inline;' action="/admin" method="post">
+     <input type="hidden" id="actionid" name="actionid" value="status">
+     <input type="hidden" id="phase" name="phase" value="setup">
+     <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure to setup the game?')">Setup</button>
+  </form>
+  <form style='display:inline;' action="/admin" method="post">
+     <input type="hidden" id="actionid" name="actionid" value="status">
+     <input type="hidden" id="phase" name="phase" value="running">
+     <button type="submit" class="btn btn-default" onclick="return confirm('Are you sure to start the game?')">Start</button>
+  </form>
+  <form style='display:inline;' action="/admin" method="post">
+     <input type="hidden" id="actionid" name="actionid" value="reset">
+     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to RESET the game? This is NOT reversible.')">Reset</button>
+  </form>
+  <form style='display:inline;' action="/admin" method="post">
+     <input type="hidden" id="actionid" name="actionid" value="update">
+     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to update the action points?')">Update AP</button>
+  </form>
+  </div>
+
+  <br>
+
+  <p><b>Alliance</b></p>
+
+  <form action="/admin" method="post">
+    <div class="container" style="max-width:400px;">
+      <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="user1" type="text" class="form-control" name="user1" placeholder="User 1" required>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="user2" type="text" class="form-control" name="user2" placeholder="User 2" required>
+      </div>
+      <input type="hidden" id="actionid" name="actionid" value="ally">
+      <button type="submit" class="btn btn-block">Ally</button>
+    </div>
+  </form>
+
+  <br>
+
+  <p><b>Announcement</b></p>
+
+  <form action="/admin" method="post">
+     <input type="hidden" id="actionid" name="actionid" value="message">
+    <div class="container" style="max-width:400px;">
+      <textarea name="response" id="response" placeholder="Write your announcement..." required style="width:100%;height:200px;"></textarea>
+      <br>
+      <button type="submit" class="btn btn-default">Post</button>
+    </div>
+  </form>
+
+  <br>
+  <form action="/admin" method="post">
+     <input type="hidden" id="actionid" name="actionid" value="clear">
+     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to REMOVE ALL annoucements? This is NOT reversible.')">Clear All Chats</button>
+  </form>
+
+  <p></p>
+  </center>
+</div>
+
+  <script src="{{ url_for('static', filename='js/script.js')}}">
+  </script>
+  </body>
+</html>

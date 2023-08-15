@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Status</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+  </head>
+  <body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('home') }}">TankTactics</a>
+    </div>
+    
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+      <li><a href="{{ url_for('home') }}">
+        <span class="glyphicon glyphicon-home"></span> Home
+      </a></li>
+      <li><a href="{{ url_for('rules') }}">
+        <span class="glyphicon glyphicon-question-sign"></span> Rules
+      </a></li>
+      <li class="active"><a href="{{ url_for('status') }}">
+        <span class="glyphicon glyphicon-envelope"></span> Status
+      </a></li>
+      <li><a href="{{ url_for('board') }}">
+        <span class="glyphicon glyphicon-th"></span> Board
+      </a></li>
+      <li><a href="{{ url_for('users') }}">
+        <span class="glyphicon glyphicon-user"></span> Users
+      </a></li>
+  {% if show_hidden %}
+      <li><a href="{{ url_for('admin') }}">
+        <span class="glyphicon glyphicon-cog"></span> Admin
+      </a></li>
+  {% endif %}
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+  {% if logged_in %}
+      <li><a href="{{ url_for('logout') }}">
+        <span class="glyphicon glyphicon-log-out"></span> Log Out
+      </a></li>
+  {% else %}
+      <li><a href="{{ url_for('login') }}">
+        <span class="glyphicon glyphicon-log-in"></span> Login
+      </a></li>
+  {% endif %}
+    </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <center>
+
+  <h1>Status</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}" alert-dismissible role="alert"> {{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+  <p>Welcome, {{ username }}!</p>
+
+  <div style="max-width: 70vw; margin: auto;">
+  <p style="white-space: pre-wrap; word-wrap: break-word; width: auto; text-align: left;">{{ content|safe }}</p>
+  </div>
+
+    <h3>Inbox</h3>
+
+  </center>
+
+  {% if logged_in %}
+
+<div style="max-width: 70vw; margin: auto;">
+
+<div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#global">Global Inbox</a>
+      </h4>
+    </div>
+    <div id="global" class="panel-collapse collapse">
+      <div class="panel-body">
+        <p style="white-space: pre-wrap; word-wrap: break-word; width: auto; text-align: left;">{{ global_inbox|safe }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="panel-group">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" href="#personal">Your Inbox</a>
+      </h4>
+    </div>
+    <div id="personal" class="panel-collapse collapse">
+      <div class="panel-body">
+        <p style="white-space: pre-wrap; word-wrap: break-word; width: auto; text-align: left;">{{ inbox|safe }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+  {% else %}
+
+  <div style="max-width: 70vw; margin: auto;">
+  <p style="white-space: pre-wrap; word-wrap: break-word; width: auto; text-align: left;">Please login to view the inbox.</p>
+  </div>
+
+  {% endif %}
+
+</div>
+
+  <script src="{{ url_for('static', filename='js/script.js')}}">
+  </script>
+  </body>
+</html>

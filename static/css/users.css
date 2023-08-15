@@ -1,0 +1,25 @@
+body, h1, h2, h3, h4, h5, h6 {
+  font-family: "Lucida Console", "Courier New", monospace;
+}
+
+body {
+  background-color: lightblue;
+}
+
+td, th {
+  padding: 0px 5px 0px 5px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+tr:nth-of-type(odd) td {
+  background-color: #A0D0E0;
+}
+
+.disabled {
+  color: Salmon;
+}
+
+.container span {
+  display: inline-block;
+}

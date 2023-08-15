@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rules</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+
+<style>
+.panel-body {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+</style>
+
+  </head>
+  <body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{ url_for('home') }}">TankTactics</a>
+    </div>
+    
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+      <li><a href="{{ url_for('home') }}">
+        <span class="glyphicon glyphicon-home"></span> Home
+      </a></li>
+      <li class="active"><a href="{{ url_for('rules') }}">
+        <span class="glyphicon glyphicon-question-sign"></span> Rules
+      </a></li>
+      <li><a href="{{ url_for('status') }}">
+        <span class="glyphicon glyphicon-envelope"></span> Status
+      </a></li>
+      <li><a href="{{ url_for('board') }}">
+        <span class="glyphicon glyphicon-th"></span> Board
+      </a></li>
+      <li><a href="{{ url_for('users') }}">
+        <span class="glyphicon glyphicon-user"></span> Users
+      </a></li>
+  {% if show_hidden %}
+      <li><a href="{{ url_for('admin') }}">
+        <span class="glyphicon glyphicon-cog"></span> Admin
+      </a></li>
+  {% endif %}
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+  {% if logged_in %}
+      <li><a href="{{ url_for('logout') }}">
+        <span class="glyphicon glyphicon-log-out"></span> Log Out
+      </a></li>
+  {% else %}
+      <li><a href="{{ url_for('login') }}">
+        <span class="glyphicon glyphicon-log-in"></span> Login
+      </a></li>
+  {% endif %}
+    </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <center>
+
+  <h1>Rules</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }}" alert-dismissible role="alert"> {{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+  <p>Welcome to Tank Tactics!</p>
+  </center>
+
+<div style="width:70vw;margin-left:auto;margin-right:auto;">
+<p>TankTactics takes place on a board with 13 rows and 15 columns.</p>
+
+<p>In this game, you play as a tank. You start with 3 lives and 1 Action Point (AP).</p>
+
+<p>You need to prove yourself by taking over <span style="background-color:Gold">the centre of the board</span> 👑 (highlighted in gold). 
+To win, you must maintain control of <span style="background-color:Gold">the centre of the board</span> for a full day (from 7 AM to the next 7 AM, without interruption).</p>
+
+<p>To achieve this goal, you can use your Action Points (APs) to take various actions.
+However, you are limited by the number of APs you have.</p>
+
+<p>Here are the actions:</p>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><b>Move</b> (Cost: 1 AP)</div>
+  <div class="panel-body">You can move to any adjacent empty square (including squares with hearts) horizontally, vertically, or diagonally.<br></div>
+  <div class="panel-heading"><b>Attack</b> (Cost: 1 AP)</div>
+  <div class="panel-body"><p>You can attack another tank, taking one of their lives. If you deplete all the lives of the tank, you kill the tank and steal their APs.</p>
+To execute an attack, the target tank must be within <span style="background-color:#74a662">your range</span> (highlighted in green).
+Initially, <span style="background-color:#74a662">your range</span> extends 2 squares horizontally and vertically from your position.</div>
+  <div class="panel-heading"><b>Trade</b> (Cost: 1 AP per AP given)</div>
+  <div class="panel-body">The heart of the game, you can transfer your APs to another tank within <span style="background-color:#74a662">your range</span>.</div>
+  <div class="panel-heading"><b>Upgrade</b> (Cost: 3 APs)</div>
+  <div class="panel-body">You can extend <span style="background-color:#74a662">your range</span> by 1 square in both horizontal and vertical directions.</div>
+  <div class="panel-heading"><b>Heal</b> (Cost: 2 APs)</div>
+  <div class="panel-body">You can add one more life to your tank.</div>
+</div>
+
+<p>Even if you are dead, you can still influence the game using your APs.</p>
+
+<div class="panel panel-default">
+  <div class="panel-heading"><b>Vote</b> (Cost: 1 AP)</div>
+  <div class="panel-body">You can vote a tank that is currently alive.<br>
+Each day, the tank with the highest number of votes receives 2 extra APs.<br>
+In the case of a tie, all tied tanks receive 1 extra AP.</div>
+</div>
+
+<p>At 7 AM each day, all players receive 1 AP, then the results of voting are executed.</p>
+
+<p>At the same time, a heart spawns on a random empty square of the board. Move into this square to gain an extra life!</p>
+
+<p>That's it! May the best tank win!</p>
+
+</div>
+</div>
+
+  <script src="{{ url_for('static', filename='js/script.js')}}">
+  </script>
+  </body>
+</html>
